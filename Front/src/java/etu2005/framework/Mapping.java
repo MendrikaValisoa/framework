@@ -35,7 +35,5 @@ public class Mapping {
     public Mapping(String className, String method) {
         this.setClassName(className);
         this.setMethod(method);
-    }
-   
-    
+    }    
 }
