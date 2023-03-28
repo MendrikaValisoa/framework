@@ -23,12 +23,10 @@ import javax.servlet.http.HttpServletResponse;
 public class Frontservlet extends HttpServlet {
     Map<String,Mapping> MappingUrls = new HashMap<>();
     
-    @Override
     public String getServletInfo() {
         return "Short description";
     }
 
-    @Override
     public void init() throws ServletException {
     //    super.init(); //To change body of generated methods, choose Tools | Templates.
     }
