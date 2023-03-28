@@ -46,8 +46,8 @@ public class Frontservlet extends HttpServlet {
                throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
-                     MappingUrls=FonctionUrl.fonction();
-                     System.out.println("huhu");
+                MappingUrls=FonctionUrl.fonction();
+                System.out.println("huhu");
          
          for(Map.Entry<String,Mapping> u : MappingUrls.entrySet())
          {
