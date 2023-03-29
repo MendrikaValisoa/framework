@@ -20,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Best
  */
-public class Frontservlet extends HttpServlet {
+public class FrontServlet extends HttpServlet {
     Map<String,Mapping> MappingUrls = new HashMap<>();
     
     public String getServletInfo() {
