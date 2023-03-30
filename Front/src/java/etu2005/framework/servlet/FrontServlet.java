@@ -7,10 +7,12 @@ package etu2005.framework.servlet;
 
 import etu2005.framework.FonctionUrl;
 import etu2005.framework.Mapping;
+import etu2005.framework.ModelView;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -40,17 +42,32 @@ public class FrontServlet extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        try (PrintWriter out = response.getWriter()) {
-                     MappingUrls=FonctionUrl.fonction();
-                     System.out.println("huhu");
-         
-         for(Map.Entry<String,Mapping> u : MappingUrls.entrySet())
-         {
-             System.out.println("jiji");
-             System.out.println(u.getKey() +  " : "  +  u.getValue().getClassName()+ " || " +  u.getValue().getMethod());
-         }
-            /* TODO output your page here. You may use following sample code. */
-            out.println(request.getContextPath()+request.getServletPath()+ "?" +request.getQueryString());
+         try {
+            String current = request.getRequestURI().replace(request.getContextPath(), "");
+            response.getWriter().println("Current URI: " + current); // Débogage
+
+            if (MappingUrls.containsKey(current)) {
+                Mapping mapp = MappingUrls.get(current);
+                String className = mapp.getClassName();
+                String packageName = "test";
+                String fullClassName = packageName + "." + className;
+
+                response.getWriter().println("Class name: " + className); // Débogage
+
+                Object obj = Class.forName(fullClassName).getConstructor().newInstance();
+                System.out.println("Class name: " + obj.getClass().getName()); // Afficher le nom de la classe
+                System.out.println("Method name: " + mapp.getMethod()); // Afficher le nom de la méthode
+                ModelView model = (ModelView) obj.getClass().getMethod(mapp.getMethod()).invoke(obj);
+                System.out.println("View name: " + model.getView()); // Afficher le nom de la vue
+                RequestDispatcher disp = request.getRequestDispatcher(model.getView());
+                disp.forward(request, response);
+            }
+        } catch (
+
+        Exception e) {
+            e.printStackTrace();
+            // Afficher un message d'erreur à l'utilisateur
+            response.getWriter().println("Une erreur est survenue : " + e.getMessage());
         }
     }
 
