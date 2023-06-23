@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package etu2005.framework.servlet;
+package etu2005.framework;
 
 import etu2005.framework.FonctionUrl;
 import etu2005.framework.Mapping;

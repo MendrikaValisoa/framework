@@ -5,7 +5,7 @@
  */
 package etu2005.framework;
 
-import etu2005.framework.servlet.Url;
+import etu2005.framework.Url;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
