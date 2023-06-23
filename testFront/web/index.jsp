@@ -12,7 +12,6 @@ and open the template in the editor.
     </head>
     <body>
         <div>TODO write content</div>
-        oooooooooooooooooooooooooooooooooooo
         <form action="test" method="get">
             <input type="submit" value="envoyer"> 
         </form>
