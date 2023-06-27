@@ -12,11 +12,13 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collection;
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -93,16 +95,33 @@ public class FrontServlet extends HttpServlet {
                 Enumeration<String> enu = request.getParameterNames();
                 List<String> liste = Collections.list(enu);
                 for (int i = 0; i < field.length; i++) {
+                    System.out.println(field[i].getName());
                     for (int j = 0; j < liste.size(); j++) {
-                        if (field[i].getName().trim().equals(liste.get(j))) {
-                            Method me = c.getDeclaredMethod(this.getSetter(liste.get(j)), field[i].getType());
+                        if (liste.get(j).trim().equals(field[i].getName().trim())) {
+                            Method me = c.getDeclaredMethod(this.getSetter(field[i].getName()), field[i].getType());
                             String str = request.getParameter(field[i].getName());
-                            System.out.println(str);
-                            Object obj = field[i].getType().getConstructor(String.class).newInstance(str);
-                            me.invoke(o, obj);
+                            System.out.println( "name = " + field[i].getName());
+                            if(field[i].getType() == java.util.Date.class){
+                                System.out.println("dfdfd");
+                                SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
+                                java.util.Date obj = s.parse(str);
+                                // System.out.println(obj);
+                                me.invoke(o, obj);
+                            }
+                            else if (field[i].getType() == java.sql.Date.class){
+                                java.sql.Date obj = java.sql.Date.valueOf(str);
+                                // System.out.println(obj);
+                                me.invoke(o, obj);
+                            }
+                            else {
+                                Object obj = field[i].getType().getConstructor(String.class).newInstance(str);
+                                me.invoke(o, obj);
+                            }
+                           
                         }
                     }
                 }
+
                 Object mv = m.invoke(o);
                 if (mv instanceof ModelView) {
                     ModelView model = (ModelView) mv;

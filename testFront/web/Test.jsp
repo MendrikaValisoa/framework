@@ -12,8 +12,8 @@
     </head>
     <body>
         <form action="getValues" method="post">
-            <input type="text" name="nom">
-            <input type="number" name="phone">
+            <input type="date" name="utilDate">
+            <input type="date" name="sqlDate">
             <input type="submit" value="valider">
         </form>
     </body>
