@@ -40,7 +40,7 @@ public class FrontServlet extends HttpServlet {
         String p = getInitParameter("test");
         try {
             List<Class<?>> annoted_classes = AnnotationFonction.getClassesWithAnnotation2(AnnotationController.class,
-            p);
+                    p);
             for (Class<?> c : annoted_classes) {
                 Method[] methods = c.getDeclaredMethods();
                 for (Method m : methods) {
@@ -65,7 +65,7 @@ public class FrontServlet extends HttpServlet {
         String temp = argument.substring(0, 1).toUpperCase();
         setter = temp + argument.substring(1);
         System.out.println(setter);
-        return "set"+setter;
+        return "set" + setter;
     }
 
     /**
@@ -95,27 +95,28 @@ public class FrontServlet extends HttpServlet {
                 Enumeration<String> enu = request.getParameterNames();
                 List<String> liste = Collections.list(enu);
                 for (int i = 0; i < field.length; i++) {
-                    System.out.println(field[i].getName());
+                    String fieldtab = field[i].getName() + ((field[i].getType().isArray()) ? "[]" : "");
                     for (int j = 0; j < liste.size(); j++) {
-                        if (liste.get(j).trim().equals(field[i].getName().trim())) {
-                            Method me = c.getDeclaredMethod(this.getSetter(field[i].getName()), field[i].getType());
-                            String str = request.getParameter(field[i].getName());
-                            System.out.println( "name = " + field[i].getName());
-                            if(field[i].getType() == java.util.Date.class){
-                                System.out.println("dfdfd");
-                                SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
-                                java.util.Date obj = s.parse(str);
-                                me.invoke(o, obj);
+                        Method me = c.getDeclaredMethod(this.getSetter(field[i].getName()), field[i].getType());
+                        if (liste.get(j).trim().equals(fieldtab.trim())) {
+                            if (field[i].getType().isArray() == false) {
+                                String str = request.getParameter(field[i].getName());
+                                System.out.println("name = " + field[i].getName());
+                                if (field[i].getType() == java.util.Date.class) {
+                                    SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                                    java.util.Date obj = s.parse(str);
+                                    me.invoke(o, obj);
+                                } else if (field[i].getType() == java.sql.Date.class) {
+                                    java.sql.Date obj = java.sql.Date.valueOf(str);
+                                    me.invoke(o, obj);
+                                } else {
+                                    Object obj = field[i].getType().getConstructor(String.class).newInstance(str);
+                                    me.invoke(o, obj);
+                                }
+                            } else {
+                                String[] string = request.getParameterValues(fieldtab);
+                                me.invoke(o, (Object) string);
                             }
-                            else if (field[i].getType() == java.sql.Date.class){
-                                java.sql.Date obj = java.sql.Date.valueOf(str);
-                                me.invoke(o, obj);
-                            }
-                            else {
-                                Object obj = field[i].getType().getConstructor(String.class).newInstance(str);
-                                me.invoke(o, obj);
-                            }
-                           
                         }
                     }
                 }
