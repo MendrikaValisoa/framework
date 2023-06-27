@@ -105,12 +105,10 @@ public class FrontServlet extends HttpServlet {
                                 System.out.println("dfdfd");
                                 SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH);
                                 java.util.Date obj = s.parse(str);
-                                // System.out.println(obj);
                                 me.invoke(o, obj);
                             }
                             else if (field[i].getType() == java.sql.Date.class){
                                 java.sql.Date obj = java.sql.Date.valueOf(str);
-                                // System.out.println(obj);
                                 me.invoke(o, obj);
                             }
                             else {
