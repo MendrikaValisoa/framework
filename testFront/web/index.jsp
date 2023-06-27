@@ -13,8 +13,8 @@ and open the template in the editor.
     <body>
 
         <form action="getValues" method="post">
-            <input type="text" name="nom" id="">
-            <input type="number" name="phone" id="">
+            <input type="date" name="utilDate">
+            <input type="date" name="sqlDate">
             <input type="submit" value="OK">
         </form>        
         
