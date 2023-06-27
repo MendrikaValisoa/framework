@@ -20,8 +20,12 @@ cd %FRAME_DIR%
 
 copy Front.jar "%TESTFRONT_DIR%\web\WEB-INF\lib"
 
+cd "%TESTFRONT_DIR%\src\java"
+
+javac -cp "%TESTFRONT_DIR%\web\WEB-INF\lib\Front.jar" -d "%TESTFRONT_DIR%\web\WEB-INF\classes" *.java 
+
 cd "%TESTFRONT_DIR%\web"
 
 jar -cfv Front.war .
-
+del "%TOMCAT%\"Front.war
 copy Front.war "%TOMCAT%"

@@ -22,9 +22,10 @@ public class AnnotationFonction {
     public static List<Class<?>> getClassesWithAnnotation2(Class<? extends Annotation> annotation,String p) throws Exception{
         List<Class<?>> classes = new ArrayList<>();
         for (Class<?> cls : getClassesInPackage(p)) {
-            if (cls.isAnnotationPresent(annotation)) {
+            if ( cls.isAnnotationPresent(AnnotationController.class)) {
                 classes.add(cls);
             }
+            // javax.swing.JOptionPane.showMessageDialog(new javax.swing.JFrame(), resource.getProtocol());
         }
         return classes;
     }
@@ -32,7 +33,7 @@ public class AnnotationFonction {
     private static List<Class<?>> getClassesInPackage(String packageName) throws ClassNotFoundException, URISyntaxException, IOException {
         List<Class<?>> classes = new ArrayList<>();
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        String path = packageName.replace('.', '/');
+        String path = packageName.replace("[.]", "\\\\");
         Enumeration<URL> resources = classLoader.getResources(path);
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
@@ -42,7 +43,7 @@ public class AnnotationFonction {
         }
         return classes;
     }
-
+    
     private static List<Class<?>> getClassesInDirectory(File directory, String packageName) throws ClassNotFoundException {
         List<Class<?>> classes = new ArrayList<>();
         if (directory.exists()) {
