@@ -21,6 +21,7 @@ public class Classtest {
     Integer phone;
     java.util.Date utilDate;
     java.sql.Date sqlDate;
+    String[] genre;
 
     public void setNom(String nom) {
         this.nom = nom;
@@ -34,6 +35,9 @@ public class Classtest {
     public void setSqlDate(java.sql.Date sqlDate){
         this.sqlDate = sqlDate;
     }
+    public void setGenre(String[] genre){
+        this.genre = genre;
+    }
     public String getNom() {
         return nom;
     }
@@ -46,6 +50,10 @@ public class Classtest {
     public java.sql.Date getSqlDate(){
         return sqlDate;
     }
+    public String[] getGenre(){
+        return genre;
+    }
+    
 
     @Url(nom="test")
     public ModelView view(){
@@ -57,8 +65,9 @@ public class Classtest {
     @Url(nom="getValues")
     public ModelView getValues() {
         ModelView model = new ModelView();
-        System.out.println(getUtilDate());
-        System.out.println(getSqlDate());
+        for (int i = 0; i < getGenre().length; i++) {
+            System.out.println(getGenre()[i]);
+        }
         model.setView("Test.jsp");
         return model;
     }
