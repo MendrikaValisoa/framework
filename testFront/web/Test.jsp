@@ -11,9 +11,6 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     </head>
     <body>
-        <form action="getFile" method="post" enctype="multipart/form-data">
-            <input type="file" name="file">
-            <input type="submit" value="valider">
-        </form>
+        
     </body>
 </html>

@@ -10,6 +10,7 @@ import etu2005.framework.Mapping;
 import etu2005.framework.ModelView;
 import etu2005.framework.Parametre;
 import etu2005.framework.UploadFile;
+import etu2005.framework.Scope;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -44,6 +45,7 @@ import javax.servlet.annotation.MultipartConfig;
 @MultipartConfig()
 public class FrontServlet extends HttpServlet {
     Map<String, Mapping> MappingUrls = new HashMap<>();
+    Map<String, Object> singleton = new HashMap<>();
 
     @Override
     public void init() throws ServletException {
@@ -62,6 +64,11 @@ public class FrontServlet extends HttpServlet {
                         etu2005.framework.Url app = m.getAnnotation(etu2005.framework.Url.class);
                         String url = app.nom();
                         this.MappingUrls.put(url, mapping);
+                    }
+                }
+                for (int i = 0; i < annoted_classes.size(); i++) {
+                    if (annoted_classes.get(i).isAnnotationPresent(Scope.class)) {
+                        singleton.put(annoted_classes.get(i).getName(),null);
                     }
                 }
             }
@@ -140,7 +147,6 @@ public class FrontServlet extends HttpServlet {
                 String className = this.MappingUrls.get(url).getClassName();
                 String method = this.MappingUrls.get(url).getMethod();
                 Class<?> c = Class.forName(className);
-                System.out.println(method);
                 Method m = null;
 
                 Method [] met = c.getDeclaredMethods();
@@ -152,7 +158,19 @@ public class FrontServlet extends HttpServlet {
                 }                
 
                 Field[] field = c.getDeclaredFields();
-                Object o = c.getConstructor().newInstance();
+                Object o = null;
+                if (c.isAnnotationPresent(Scope.class)) {
+                    if (this.singleton.containsKey(c.getName()) && this.singleton.get(c.getName())!=null ) {
+                        o = this.singleton.get(c.getName());
+                    }
+                    else{
+                        o = c.getConstructor().newInstance();
+                        this.singleton.replace(c.getName(), null,o);
+                    }
+                }else{
+                    o = c.getConstructor().newInstance();                    
+                }
+                System.out.println(o);
                 Enumeration<String> enu = request.getParameterNames();
                 List<String> liste = Collections.list(enu);
                 for (int i = 0; i < field.length; i++) {
@@ -162,7 +180,6 @@ public class FrontServlet extends HttpServlet {
                         if (liste.get(j).trim().equals(fieldtab.trim())) {
                             if (field[i].getType().isArray() == false) {
                                 String str = request.getParameter(field[i].getName());
-                                System.out.println("name = " + field[i].getName());
                                 if (field[i].getType() == java.util.Date.class) {
                                     SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
                                     java.util.Date obj = s.parse(str);
@@ -186,7 +203,6 @@ public class FrontServlet extends HttpServlet {
                 for (int i = 0; i < para.length; i++) {
                     if (para[i].isAnnotationPresent(Parametre.class)) {
                             Parametre pa = para[i].getAnnotation(Parametre.class);
-                            System.out.println(para[i].getAnnotation(Parametre.class));
                             String p = para[i].getAnnotation(Parametre.class).parametre() + ((para[i].getType().isArray()) ? "[]" : "");
                             for (int j = 0; j < liste.size(); j++) {
                                 if (liste.get(j).trim().equals(p.trim())) {
