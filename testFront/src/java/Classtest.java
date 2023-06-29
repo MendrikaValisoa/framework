@@ -7,7 +7,7 @@
  package test;
 
 import etu2005.framework.ModelView;
-
+import etu2005.framework.Parametre;
 import etu2005.framework.AnnotationController;
 import etu2005.framework.Url;
 
@@ -68,7 +68,15 @@ public class Classtest {
         for (int i = 0; i < getGenre().length; i++) {
             System.out.println(getGenre()[i]);
         }
-        model.setView("Test.jsp");
+        model.setView("Test.jsp");  
+        return model;
+    }
+
+    @Url(nom="parametre")
+    public ModelView getParametre(@Parametre(parametre = "param") Integer i){
+        ModelView model = new ModelView();
+        System.out.println(i);
+        model.setView("index.jsp");
         return model;
     }
   
