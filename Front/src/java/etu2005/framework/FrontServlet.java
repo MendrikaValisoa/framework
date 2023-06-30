@@ -46,6 +46,7 @@ import javax.servlet.annotation.MultipartConfig;
 public class FrontServlet extends HttpServlet {
     Map<String, Mapping> MappingUrls = new HashMap<>();
     Map<String, Object> singleton = new HashMap<>();
+    Map<String, Object> session = new HashMap<>();
     String sessionName;
     String sessionProfile;
 
@@ -169,7 +170,7 @@ public class FrontServlet extends HttpServlet {
                             throw new Exception("privilege non accorder");
                         }
                     } else {
-                        throw new Exception("pas de sessiion");
+                        throw new Exception("pas de session");
                     }
                 }
 
@@ -256,16 +257,21 @@ public class FrontServlet extends HttpServlet {
                 } catch (Exception e) {
                 }
                 Object mv = null;
-
+                Enumeration<String> enume = request.getSession().getAttributeNames();
+                List<String> listes = Collections.list(enume);
+                for (int i = 0; i < listes.size(); i++) {
+                    session.put(listes.get(i),request.getSession().getAttribute(listes.get(i)));
+                }
+                Method ses = c.getDeclaredMethod("setSession",HashMap.class);
+                ses.invoke(o, session);  
                 mv = m.invoke(o, parametres);
-
                 if (mv instanceof ModelView) {
                     ModelView model = (ModelView) mv;
-                    HashMap<String, Object> session = model.getSession();
-                    for (Map.Entry<String, Object> zavatra : session.entrySet()) {
-                        request.getSession().setAttribute(zavatra.getKey(), zavatra.getValue());
-                        
+                    HashMap<String, Object> se = model.getSession();
+                    for (Map.Entry<String, Object> zavatra : se.entrySet()) {
+                        request.getSession().setAttribute(zavatra.getKey(), zavatra.getValue());  
                     }
+
                     RequestDispatcher dispat = request.getRequestDispatcher(model.getView());
                     dispat.forward(request, response);
                 }

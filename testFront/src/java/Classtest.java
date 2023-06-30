@@ -10,6 +10,9 @@ import etu2005.framework.ModelView;
 import etu2005.framework.Parametre;
 import etu2005.framework.Scope;
 import etu2005.framework.UploadFile;
+
+import java.util.HashMap;
+
 import etu2005.framework.AnnotationController;
 import etu2005.framework.Authentification;
 import etu2005.framework.Url;
@@ -27,7 +30,14 @@ public class Classtest {
     java.sql.Date sqlDate;
     String[] genre;
     UploadFile file;
+    HashMap<String,Object> session = new HashMap<>();
 
+    public HashMap<String, Object> getSession() {
+        return session;
+    }
+    public void setSession(HashMap<String, Object> session) {
+        this.session = session;
+    }
     public void setNom(String nom) {
         this.nom = nom;
     }
@@ -68,6 +78,10 @@ public class Classtest {
     @Url(nom="test")
     public ModelView view(){
         ModelView model = new ModelView();
+        model.addSession("SessionTEst", false);
+        this.getSession().forEach((key, value) -> {
+            System.out.println("Clé : " + key + ", Valeur : " + value);
+        });
         model.setView("index.jsp");
         return model;
     } 
