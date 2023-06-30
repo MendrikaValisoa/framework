@@ -280,6 +280,12 @@ public class FrontServlet extends HttpServlet {
                         response.setContentType("application/json");
                         out.print(new com.google.gson.Gson().toJson(data));
                     }else{
+                        if (model.isInvalidateSession()) {
+                            request.getSession().invalidate();
+                        }
+                       for (String string : model.getRemoveSession()) {
+                            request.getSession().removeAttribute(string);
+                       }
                         RequestDispatcher dispat = request.getRequestDispatcher(model.getView());
                         dispat.forward(request, response);
                     }

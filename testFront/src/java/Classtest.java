@@ -145,4 +145,14 @@ public class Classtest {
         return c;
     } 
 
+     @Url(nom="logout")
+    public ModelView logout(){
+        ModelView model = new ModelView();
+        model.addToRemove("isConnected","profile");
+        // model.setInvalidateSession(true);
+        model.setView("index.jsp");
+        return model;
+    }
+    
+
 }
