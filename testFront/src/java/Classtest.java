@@ -15,6 +15,7 @@ import java.util.HashMap;
 
 import etu2005.framework.AnnotationController;
 import etu2005.framework.Authentification;
+import etu2005.framework.ApiRest;
 import etu2005.framework.Url;
 
 /**
@@ -135,4 +136,13 @@ public class Classtest {
         return model;
     }      
     
+    @ApiRest()
+    @Url(nom="restApi")
+    public Classtest getApiRest(){ 
+        Classtest c = new Classtest();
+        c.setNom("Mendrika");
+        c.setPhone(12345);
+        return c;
+    } 
+
 }
