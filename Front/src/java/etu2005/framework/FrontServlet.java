@@ -267,13 +267,22 @@ public class FrontServlet extends HttpServlet {
                 mv = m.invoke(o, parametres);
                 if (mv instanceof ModelView) {
                     ModelView model = (ModelView) mv;
+                    HashMap<String, Object> data = model.getData();
                     HashMap<String, Object> se = model.getSession();
+                    for (Map.Entry<String, Object> zavatra : data.entrySet()) {
+                        request.setAttribute(zavatra.getKey(), zavatra.getValue());  
+                    }
                     for (Map.Entry<String, Object> zavatra : se.entrySet()) {
                         request.getSession().setAttribute(zavatra.getKey(), zavatra.getValue());  
                     }
+                    if (model.isGson()) {
+                        response.setContentType("application/json");
+                        out.print(new com.google.gson.Gson().toJson(data));
+                    }else{
+                        RequestDispatcher dispat = request.getRequestDispatcher(model.getView());
+                        dispat.forward(request, response);
+                    }
 
-                    RequestDispatcher dispat = request.getRequestDispatcher(model.getView());
-                    dispat.forward(request, response);
                 }
             }
         } catch (Exception e) {

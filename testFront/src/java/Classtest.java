@@ -126,5 +126,13 @@ public class Classtest {
         return model;
     }
     
+    @Url(nom="json")
+    public ModelView getJson(){ 
+        ModelView model = new ModelView();
+        model.setGson(true);
+        model.addItem("data","data");
+        model.setView("index.jsp");
+        return model;
+    }      
     
 }
